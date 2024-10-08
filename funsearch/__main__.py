@@ -69,7 +69,7 @@ def main(ctx):
 @click.argument('inputs')
 # @click.option('--model_name', default="gpt-3.5-turbo-instruct", help='LLM model')
 # @click.option('--model_name', default="deepseek-coder", help='LLM model')
-@click.option('--model_name', default="starcoder-carlo", help='LLM model')
+@click.option('--model_name', default="starcoder2-control", help='LLM model')
 @click.option('--output_path', default="./data/", type=click.Path(file_okay=False), help='path for logs and data')
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
