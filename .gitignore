@@ -2,8 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-openai-key.txt
-openai-key-1.txt
 
 # Distribution / packaging
 .Python
@@ -28,8 +26,3 @@ data/
 .vscode/
 .devcontainer/
 .github/
-
-tests/ball_and_beam_test.py
-tests/inv_pendulum_test.py
-tests/dm_control_swingup_test.py
-tests/dm_control_ballcup_test.py
