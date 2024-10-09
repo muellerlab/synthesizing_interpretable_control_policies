@@ -34,6 +34,7 @@ funsearch run examples/dm_control_swingup_spec.py 1 --sandbox_type ExternalProce
 funsearch run examples/dm_control_ballcup_spec.py 1 --sandbox_type ExternalProcessSandbox
 ```
 
+Make sure to select the right regex in `evaluator.py`.
 You should see output something like
 
 ```
