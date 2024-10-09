@@ -1,4 +1,4 @@
-"""Finds a heuristic policy for the pendulum swingup task.
+"""Finds a policy for the pendulum swingup task.
 
 On every iteration, improve policy_v1 over the policy_vX methods from previous iterations.
 Make only small changes. Try to make the code short. 
@@ -11,7 +11,7 @@ from dm_control import suite
 
 @funsearch.run
 def solve(num_runs) -> float:
-  """Returns the reward for a heuristic.
+  """Returns the reward for a policy.
   """
   env = suite.load(domain_name="pendulum", task_name="swingup")
   obs_spec = env.observation_spec()
@@ -26,7 +26,7 @@ def solve(num_runs) -> float:
       cos_theta = time_step.observation['orientation'][0]
       sin_theta = -time_step.observation['orientation'][1]
       theta = np.arctan2(sin_theta, cos_theta)
-      action = heuristic(obs)
+      action = policy(obs)
       action = np.clip(action, -1, 1)
       time_step = env.step(action)
       total_reward += 1.0 - np.abs(theta)/np.pi - 0.1*np.abs(action) #- 0.1*np.abs(obs[2])
@@ -49,7 +49,7 @@ def initialize_to_zero(env):
   env.physics.named.data.qfrc_bias['hinge'][0] = 0.0
 
 @funsearch.evolve
-def heuristic(obs: np.ndarray) -> float:
+def policy(obs: np.ndarray) -> float:
   """Returns an action between -1 and 1.
   obs size is 3.
   """

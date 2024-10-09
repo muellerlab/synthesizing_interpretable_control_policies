@@ -30,29 +30,16 @@ from funsearch import sandbox
   - a new 'def'
   - ` or ' or # without indentation
 """
-# METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-# METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
-# method_str = "def priority_v"
-
-# [carlo] trying to change this to solve inverted pendulum
-# METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-# METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
-# method_str = "def policy_v"
 
 # use this for pendulum swingup
-# METHOD_MATCHER = re.compile(r"def heuristic_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-# METHOD_NAME_MATCHER = re.compile(r"heuristic_v\d+")
-# method_str = "def heuristic_v"
+METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
+method_str = "def policy_v"
 
 # use this for ball in cup
-METHOD_MATCHER = re.compile(r"def heuristic_v\d\(.*?\) -> np.ndarray:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-METHOD_NAME_MATCHER = re.compile(r"heuristic_v\d+")
-method_str = "def heuristic_v"
-
-# [carlo] solve inverted pendulum with reduced context 
-# METHOD_MATCHER = re.compile(r"def function_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-# METHOD_NAME_MATCHER = re.compile(r"function_v\d+")
-# method_str = "def function_v"
+# METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> np.ndarray:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+# METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
+# method_str = "def policy_v"
 
 class _FunctionLineVisitor(ast.NodeVisitor):
   """Visitor that finds the last line number of a function with a given name."""

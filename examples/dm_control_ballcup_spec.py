@@ -1,4 +1,4 @@
-"""Finds a heuristic policy for the ball in cup task.
+"""Finds a policy for the ball in cup task.
 
 On every iteration, improve policy_v1 over the policy_vX methods from previous iterations.
 Make only small changes. Try to make the code short. 
@@ -11,7 +11,7 @@ from dm_control import suite
 
 @funsearch.run
 def solve(num_runs) -> float:
-  """Returns the reward for a heuristic.
+  """Returns the reward for a policy.
   """
   env = suite.load(domain_name="ball_in_cup", task_name="catch") 
   obs_spec = env.observation_spec()
@@ -27,7 +27,7 @@ def solve(num_runs) -> float:
     obs = concatenate_obs(time_step, obs_spec)
     obs[3] -= 0.3
     for _ in range(1000):
-      action = heuristic(obs, action_spec.shape)
+      action = policy(obs, action_spec.shape)
       # if action is None:
       #   print("action is None")
       # action = np.array(action, dtype=np.float64)
@@ -63,7 +63,7 @@ def custom_reward(obs: np.ndarray) -> float:
   return reward
 
 @funsearch.evolve
-def heuristic(obs: np.ndarray, output_shape: tuple) -> np.ndarray:
+def policy(obs: np.ndarray, output_shape: tuple) -> np.ndarray:
   """Returns an action between -1 and 1.
   obs size is 8. return size is 2.
   """
