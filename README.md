@@ -7,7 +7,12 @@ This repo contains the code associated to the paper "Synthesizing Interpretable 
 If you use this code in an academic context, please cite the publication:
 
 ```
-
+@article{bosio2024synthesizing,
+  title={Synthesizing Interpretable Control Policies through Large Language Model Guided Search},
+  author={Bosio, Carlo and Mueller, Mark W},
+  journal={arXiv preprint arXiv:2410.05406},
+  year={2024}
+}
 ```
 
 ## Usage
