@@ -13,7 +13,8 @@ COPY funsearch ./funsearch
 
 RUN pip install --no-deps . 
 RUN llm install llm-ollama
-RUN pip install dm_control
+RUN pip install mujoco==3.2.4 
+RUN pip install dm_control==1.0.24
 
 # if running the container
 RUN rm -r ./funsearch ./build
