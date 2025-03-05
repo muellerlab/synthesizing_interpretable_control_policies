@@ -31,3 +31,4 @@ pdm.lock
 
 # Misc
 my_cmds.txt
+tests/

@@ -26,6 +26,7 @@ from collections.abc import Iterator, MutableSet, Sequence
 import dataclasses
 import io
 import tokenize
+import re
 
 from absl import logging
 
@@ -259,12 +260,8 @@ def extract_variable_value(code_str, var_name):
       - Direct string assignments (e.g., my_var = "hello")
       - Values produced by a call to re.compile (e.g., my_regex = re.compile(r"..."))
     
-    Parameters:
-      code_str (str): The Python code to parse.
-      var_name (str): The name of the variable to extract.
-    
-    Returns:
-      str or None: The extracted string value if found; otherwise, None.
+    If the variable is assigned via re.compile, this function returns the compiled regex.
+    Otherwise, it returns the string literal.
     """
     tree = ast.parse(code_str)
     
@@ -274,14 +271,14 @@ def extract_variable_value(code_str, var_name):
                 if isinstance(target, ast.Name) and target.id == var_name:
                     value_node = node.value
                     
-                    # Case 1: Direct string assignment
+                    # Direct string assignment:
                     if isinstance(value_node, ast.Constant) and isinstance(value_node.value, str):
                         return value_node.value
                     
-                    # Case 2: A call to re.compile (or similar)
+                    # Call to re.compile:
                     elif isinstance(value_node, ast.Call):
-                        # Ensure we are dealing with a call to a function with attribute 'compile'
                         if hasattr(value_node.func, 'attr') and value_node.func.attr == 'compile':
                             if value_node.args and isinstance(value_node.args[0], ast.Constant) and isinstance(value_node.args[0].value, str):
-                                return value_node.args[0].value
+                                pattern_str = value_node.args[0].value
+                                return re.compile(pattern_str)
     return None

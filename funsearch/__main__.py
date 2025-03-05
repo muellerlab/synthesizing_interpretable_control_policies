@@ -24,7 +24,6 @@ from funsearch import config, core, sandbox, sampler, programs_database, code_ma
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(level=LOGLEVEL)
 
-
 def get_all_subclasses(cls):
   all_subclasses = []
 
@@ -111,7 +110,11 @@ def run(spec_file, inputs, model_name, output_path, load_backup, iterations, sam
   # model.key = model.get_key()
   lm = sampler.LLM(2, model, log_path)
 
-  specification = spec_file.read()
+  specification = spec_file.read() 
+  method_str = code_manipulation.extract_variable_value(specification, "method_str")
+  method_matcher = code_manipulation.extract_variable_value(specification, "METHOD_MATCHER")
+  method_name_matcher = code_manipulation.extract_variable_value(specification, "METHOD_NAME_MATCHER")
+
   function_to_evolve, function_to_run = core._extract_function_names(specification)
   template = code_manipulation.text_to_program(specification)
 
@@ -131,6 +134,9 @@ def run(spec_file, inputs, model_name, output_path, load_backup, iterations, sam
     function_to_evolve,
     function_to_run,
     inputs,
+    method_str,
+    method_matcher,
+    method_name_matcher
   ) for _ in range(conf.num_evaluators)]
 
   # We send the initial implementation to be analysed by one of the evaluators.
