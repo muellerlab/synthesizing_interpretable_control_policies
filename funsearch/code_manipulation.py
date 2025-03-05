@@ -251,3 +251,37 @@ def yield_decorated(code: str, module: str, name: str) -> Iterator[str]:
             and attribute.value.id == module
             and attribute.attr == name):
           yield node.name
+
+def extract_variable_value(code_str, var_name):
+    """
+    Extracts the value assigned to a variable from a Python code string using AST.
+    This function supports extraction of:
+      - Direct string assignments (e.g., my_var = "hello")
+      - Values produced by a call to re.compile (e.g., my_regex = re.compile(r"..."))
+    
+    Parameters:
+      code_str (str): The Python code to parse.
+      var_name (str): The name of the variable to extract.
+    
+    Returns:
+      str or None: The extracted string value if found; otherwise, None.
+    """
+    tree = ast.parse(code_str)
+    
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == var_name:
+                    value_node = node.value
+                    
+                    # Case 1: Direct string assignment
+                    if isinstance(value_node, ast.Constant) and isinstance(value_node.value, str):
+                        return value_node.value
+                    
+                    # Case 2: A call to re.compile (or similar)
+                    elif isinstance(value_node, ast.Call):
+                        # Ensure we are dealing with a call to a function with attribute 'compile'
+                        if hasattr(value_node.func, 'attr') and value_node.func.attr == 'compile':
+                            if value_node.args and isinstance(value_node.args[0], ast.Constant) and isinstance(value_node.args[0].value, str):
+                                return value_node.args[0].value
+    return None

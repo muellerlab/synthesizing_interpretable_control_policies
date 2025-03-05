@@ -6,8 +6,12 @@ Make only small changes. Try to make the code short.
 
 import numpy as np
 import funsearch
+import re
 from dm_control import suite
 
+METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
+method_str = "def policy_v"
 
 @funsearch.run
 def solve(num_runs) -> float:

@@ -18,7 +18,7 @@ import ast
 import re
 from collections.abc import Sequence
 import copy
-from typing import Any, Tuple
+from typing import Any, Tuple, Pattern
 
 from funsearch import code_manipulation
 from funsearch import programs_database
@@ -32,9 +32,9 @@ from funsearch import sandbox
 """
 
 # use this for pendulum swingup
-METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
-method_str = "def policy_v"
+# METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+# METHOD_NAME_MATCHER = re.compile(r"policy_v\d+")
+# method_str = "def policy_v"
 
 # use this for ball in cup
 # METHOD_MATCHER = re.compile(r"def policy_v\d\(.*?\) -> np.ndarray:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
@@ -47,6 +47,7 @@ class _FunctionLineVisitor(ast.NodeVisitor):
   def __init__(self, target_function_name: str) -> None:
     self._target_function_name: str = target_function_name
     self._function_end_line: int | None = None
+    
 
   def visit_FunctionDef(self, node: Any) -> None:  # pylint: disable=invalid-name
     """Collects the end line number of the target function."""
@@ -61,7 +62,7 @@ class _FunctionLineVisitor(ast.NodeVisitor):
     return self._function_end_line
 
 
-def _find_method_implementation(generated_code: str) -> Tuple[str, str]:
+def _find_method_implementation(generated_code: str, METHOD_MATCHER: Pattern, METHOD_NAME_MATCHER: Pattern) -> Tuple[str, str]:
   """Find the last method specified in METHOD_MATCHER within generated code.
 
   Return the code and the name of the method.
@@ -74,7 +75,7 @@ def _find_method_implementation(generated_code: str) -> Tuple[str, str]:
   return last_match, name
 
 
-def _trim_function_body(generated_code: str) -> str:
+def _trim_function_body(generated_code: str, method_str: str, method_matcher: Pattern, method_name_matcher: Pattern) -> str:
   """Extracts the body of the generated function, trimming anything after it."""
   if not generated_code:
     return ''
@@ -84,7 +85,7 @@ def _trim_function_body(generated_code: str) -> str:
   method_name = "fake_function_header"
   # Check is the response only a continuation for our prompt or full method implementation with header
   if method_str in generated_code:
-    code, method_name = _find_method_implementation(generated_code)
+    code, method_name = _find_method_implementation(generated_code, method_matcher, method_name_matcher)
   else:
     code = f'def {method_name}():\n{generated_code}'
 
@@ -111,9 +112,12 @@ def _sample_to_program(
     version_generated: int | None,
     template: code_manipulation.Program,
     function_to_evolve: str,
+    method_str: str, 
+    method_matcher: Pattern, 
+    method_name_matcher: Pattern
 ) -> tuple[code_manipulation.Function, str]:
   """Returns the compiled generated function and the full runnable program."""
-  body = _trim_function_body(generated_code)
+  body = _trim_function_body(generated_code, method_str, method_matcher, method_name_matcher)
   if version_generated is not None:
     body = code_manipulation.rename_function_calls(
         body,
@@ -150,7 +154,10 @@ class Evaluator:
       function_to_evolve: str,
       function_to_run: str,
       inputs: Sequence[Any],
-      timeout_seconds: int = 30,
+      method_str: str,
+      method_matcher: Pattern,
+      method_name_matcher: Pattern,
+      timeout_seconds: int = 30
   ):
     self._database = database
     self._template = template
@@ -159,6 +166,9 @@ class Evaluator:
     self._inputs = inputs
     self._timeout_seconds = timeout_seconds
     self._sandbox = sbox
+    self._method_matcher = method_matcher
+    self._method_str = method_str
+    self._method_name_matcher = method_name_matcher
 
   def analyse(
       self,
@@ -168,7 +178,7 @@ class Evaluator:
   ) -> None:
     """Compiles the sample into a program and executes it on test inputs."""
     new_function, program = _sample_to_program(
-        sample, version_generated, self._template, self._function_to_evolve)
+        sample, version_generated, self._template, self._function_to_evolve, self._method_str, self._method_matcher, self._method_name_matcher)
 
     scores_per_test = {}
     for current_input in self._inputs:            # runs the function on all inputs provided in the launch command

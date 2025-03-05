@@ -26,3 +26,8 @@ data/
 .vscode/
 .devcontainer/
 .github/
+pdm.lock
+.pdm-python
+
+# Misc
+my_cmds.txt

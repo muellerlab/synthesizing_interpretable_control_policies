@@ -13,12 +13,15 @@ COPY funsearch ./funsearch
 
 RUN pip install --no-deps . 
 RUN llm install llm-ollama
-RUN pip install dm_control
+
+RUN pip install mujoco==3.2.4 
+RUN pip install dm_control==1.0.24
+
 
 # if running the container
 RUN rm -r ./funsearch ./build
 CMD /bin/bash
 
 # if debugging
-# RUN pip install debugpy
-# CMD ["python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "funsearch", "run", "examples/inv_pendulum_spec.py", "0.6", "--sandbox_type", "ExternalProcessSandbox"]
+#RUN pip install debugpy
+#CMD ["python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "funsearch", "run", "examples/inv_pendulum_spec.py", "0.6", "--sandbox_type", "ExternalProcessSandbox"]
