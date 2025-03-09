@@ -1,4 +1,4 @@
-"""Finds a policy for designing a robot for the given task.
+"""Designs a robot for the given task.
 
 On every iteration, improve robot_v1 over the robot_vX from previous iterations.
 Make only small changes. Try to make the code short. 
