@@ -13,7 +13,7 @@ from typing import List
 import requests
 
 
-METHOD_MATCHER = re.compile(r"def robot_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+METHOD_MATCHER = re.compile(r"def robot_v\d\(.*?\) -> List\[int\]:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
 METHOD_NAME_MATCHER = re.compile(r"robot_v\d+")
 method_str = "def robot_v"
 
