@@ -9,6 +9,7 @@ COPY pyproject.toml README.md pdm.lock ./
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install  --no-self
 COPY examples ./examples
+COPY robot_search ./robot_search
 COPY funsearch ./funsearch
 
 RUN pip install --no-deps . 
@@ -16,7 +17,6 @@ RUN llm install llm-ollama
 
 RUN pip install mujoco==3.2.4 
 RUN pip install dm_control==1.0.24
-
 
 # if running the container
 RUN rm -r ./funsearch ./build
