@@ -7,6 +7,8 @@ The robot function takes in a sequence of integers and returns a new integer fro
 The function should return -1 in order to indicate that you want to end the sequence. 
 
 You may use duplicate integers and can use any method you like to come up with the new integer.
+
+Make sure to specify the return type and input typings in the function header.
 """
 
 import funsearch
@@ -15,6 +17,7 @@ from typing import List
 import requests
 import math
 import numpy as np
+import random
 
 # Regex Patterns --- Ignore these 3 variables
 METHOD_MATCHER = re.compile(r"def robot_v\d\(input_list: List\[int\]\) -> int:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
@@ -58,7 +61,6 @@ def evaluate_robot(task="RidgedTerrainTask") -> float:
 
 @funsearch.evolve
 def robot(input_list: List[int]) -> int:
-  """Returns the next number that should be appended to this sequence. Return -1 to stop the sequence.
-  Feel free to use any logic or functions you like to come up with the next number.
-  """
+  """Returns the next number that should be appended to this sequence. Return -1 to stop the sequence. The sequence always starts as just [0]"""
+  
   return 0
