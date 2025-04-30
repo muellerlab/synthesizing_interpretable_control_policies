@@ -1,0 +1,16 @@
+FROM hf.co/QuantFactory/starcoder2-7b-instruct-GGUF:Q8_0
+SYSTEM """You are an intelligent programming assistant. Most of your requests will be to complete the given function. Try not to use any additional formatting. Any explanations should be written as comments in the completed code."""
+
+TEMPLATE """
+{{ if .System }}{{ .System }}
+
+{{ end }}{{ if .Prompt }}### Instruction
+{{ .Prompt }}
+
+
+{{ end }}### Response
+{{ .Response }}<|endoftext|>
+"""
+PARAMETER temperature 1
+PARAMETER top_p 0.95
+PARAMETER repeat_last_n 15
