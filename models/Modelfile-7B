@@ -14,3 +14,4 @@ TEMPLATE """
 PARAMETER temperature 1
 PARAMETER top_p 0.95
 PARAMETER repeat_last_n 15
+PARAMETER num_predict 200

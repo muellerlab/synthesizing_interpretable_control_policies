@@ -33,3 +33,4 @@ pdm.lock
 my_cmds.txt
 tests/
 pdm.lock
+launch.json
